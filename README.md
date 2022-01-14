@@ -1,2 +1,2 @@
-# coding_problems
-Solved some coding problems on CodeChef or Codeforces
+# programming_problems
+Solved some programming problems on CodeChef or Codeforces
