@@ -1,5 +1,4 @@
 #![allow(unused)]
-#![allow(unused_imports)]
 use std::cmp::{max, min, Reverse};
 use std::io::{self, prelude::*};
 use std::str;
@@ -38,6 +37,34 @@ fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
     // To Scan input use : scan.token::<usize>();
     // To write output : write!(w, "{}", var).ok();
     // To write to new line : writeln!(w, "{}", var).ok();
+    let n = scan.token::<usize>();
+    let mut s_i: Vec<String> = Vec::new();
+
+    for _ in 0..n {
+        let temp = scan.token::<String>();
+        s_i.push(temp);
+    }
+
+    let l = s_i.len();
+    let mut total_faces: u64 = 0;
+
+    for i in 0..l {
+        if s_i[i].as_str() == "Tetrahedron" {
+            total_faces += 4
+        } else if s_i[i] == "Cube" {
+            total_faces += 6
+        } else if s_i[i] == "Octahedron" {
+            total_faces += 8
+        } else if s_i[i] == "Dodecahedron" {
+            total_faces += 12
+        } else if s_i[i] == "Icosahedron" {
+            total_faces += 20
+        } else {
+            continue;
+        }
+    }
+
+    writeln!(w, "{}", total_faces);
 }
 
 fn main() {
