@@ -2,7 +2,6 @@
 #![allow(unused)]
 #![allow(unused_imports)]
 use std::cmp::{max, min, Reverse};
-use std::collections::{HashMap, HashSet};
 use std::io::{self, prelude::*};
 use std::str;
 
@@ -40,6 +39,16 @@ fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
     // To Scan input use : scan.token::<usize>();
     // To write output : write!(w, "{}", var).ok();
     // To write to new line : writeln!(w, "{}", var).ok();
+
+    let t = scan.token::<usize>();
+    for _ in 0..t {
+        let n = scan.token::<usize>();
+        if n % 2 == 1 {
+            writeln!(w, "{}", n / 2);
+        } else {
+            writeln!(w, "{}", n / 2 - 1);
+        }
+    }
 }
 
 fn main() {
