@@ -1,6 +1,3 @@
-#![allow(unused)]
-#![allow(unused_imports)]
-use std::cmp::{max, min, Reverse};
 use std::io::{self, prelude::*};
 use std::str;
 
@@ -35,9 +32,9 @@ impl<R: BufRead> Scanner<R> {
 }
 
 fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
-    // To Scan input use : scan.token::<usize>();
-    // To write output : write!(w, "{}", var).ok();
-    // To write to new line : writeln!(w, "{}", var).ok();
+    let t = scan.token::<usize>();
+
+    writeln!(w, "{}", t).ok();
 }
 
 fn main() {
