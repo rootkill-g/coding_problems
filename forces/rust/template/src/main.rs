@@ -1,5 +1,7 @@
-use std::io::{self, prelude::*};
-use std::str;
+use std::{
+    io::{self, prelude::*},
+    str,
+};
 
 struct Scanner<R> {
     reader: R,
