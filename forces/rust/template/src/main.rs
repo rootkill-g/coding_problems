@@ -8,6 +8,7 @@ struct Scanner<R> {
     buf_str: Vec<u8>,
     buf_iter: str::SplitWhitespace<'static>,
 }
+
 impl<R: BufRead> Scanner<R> {
     fn new(reader: R) -> Self {
         Self {
@@ -16,6 +17,7 @@ impl<R: BufRead> Scanner<R> {
             buf_iter: "".split_whitespace(),
         }
     }
+
     fn token<T: str::FromStr>(&mut self) -> T {
         loop {
             if let Some(token) = self.buf_iter.next() {
@@ -33,15 +35,12 @@ impl<R: BufRead> Scanner<R> {
     }
 }
 
-fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
-    let t = scan.token::<usize>();
-
-    writeln!(w, "{}", t).ok();
-}
+fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {}
 
 fn main() {
     let (stdin, stdout) = (io::stdin(), io::stdout());
     let mut scan = Scanner::new(stdin.lock());
     let mut out = io::BufWriter::new(stdout.lock());
+
     solve(&mut scan, &mut out);
 }
