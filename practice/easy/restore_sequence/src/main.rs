@@ -1,7 +1,8 @@
-use std::collections::HashMap;
 use std::io;
 use std::io::prelude::*;
 use std::str;
+
+const MAX: usize = 4_000_000;
 
 struct Scanner<R> {
     reader: R,
@@ -35,58 +36,56 @@ impl<R: BufRead> Scanner<R> {
     }
 }
 
-fn sieve_of_eratosthenes(n: usize) -> Vec<usize> {
-    let mut primesb: Vec<bool> = vec![true; n + 1];
-    let mut p: usize = 2;
-    primesb[0] = false;
-    primesb[1] = false;
+fn sieve_of_eratosthenes() -> Vec<usize> {
+    let mut b: Vec<bool> = vec![false; MAX];
+    let mut p: usize = 3;
+    b[2] = true;
+    let mut i: usize = 3;
 
-    while p * p <= n {
-        if primesb[p] == true {
-            for mut _j in (p * p)..(n + 1) {
-                primesb[_j] = false;
-                _j += p;
+    while i < MAX {
+        b[i] = true;
+        i += 2;
+    }
+
+    while p * p < MAX {
+        if b[p] {
+            let mut j = p * p;
+            while j < MAX {
+                b[j] = false;
+                j += 2 * p;
             }
         }
 
-        p += 1;
+        p += 2;
     }
 
     let mut primes: Vec<usize> = Vec::new();
-
-    for i in 2..n {
-        if primesb[i] == true {
+    primes.push(2);
+    let mut i: usize = 3;
+    while i < MAX {
+        if b[i] {
             primes.push(i);
         }
+
+        i += 2
     }
 
     primes
 }
 
 fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
-    let primes: Vec<usize> = sieve_of_eratosthenes(4_000_000);
+    let primes: Vec<usize> = sieve_of_eratosthenes();
     let t: usize = scan.token();
 
     for _ in 0..t {
         let n: usize = scan.token();
-        let b: Vec<usize> = (0..n).map(|_| scan.token()).collect();
-        let mut ans: Vec<usize> = vec![0usize; n];
-        let mut map: HashMap<usize, usize> = HashMap::new();
 
-        for i in 0..n {
-            let e = b[i];
-
-            if map.contains_key(&e) {
-                ans[i] = map[&e];
-            } else {
-                ans[i] = primes[i];
-                map.insert(e, ans[i]);
-            }
+        for _ in 0..n {
+            let x: usize = scan.token();
+            write!(w, "{} ", primes[x - 1]).ok();
         }
 
-        for i in 0..ans.len() {
-            write!(w, "{} ", ans[i]).ok();
-        }
+        writeln!(w, "").ok();
     }
 }
 
