@@ -34,48 +34,47 @@ impl<R: BufRead> Scanner<R> {
     }
 }
 
-fn merge<T: std::cmp::PartialOrd + Copy>(arr1: &[T], arr2: &[T], ret: &mut [T]) {
-    let mut left = 0;
-    let mut right = 0;
-    let mut index = 0;
+fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
+    let t: u8 = scan.token();
+    for _ in 0..t {
+        let a: String = scan.token();
+        let b: String = scan.token();
+        let mut x: Vec<u8> = vec![0; 26];
 
-    while left < arr1.len() && right < arr2.len() {
-        if arr1[left] <= arr2[right] {
-            ret[index] = arr1[left];
-            left += 1;
-        } else {
-            ret[index] = arr2[right];
-            right += 1;
+        for i in 0..a.len() {
+            x[a.chars().nth(i).unwrap() as usize - 97] += 1;
         }
 
-        index += 1;
-    }
+        for i in 0..b.len() {
+            x[b.chars().nth(i).unwrap() as usize - 97] += 1;
+        }
 
-    if left < arr1.len() {
-        ret[index..].copy_from_slice(&arr1[left..]);
-    } else {
-        ret[index..].copy_from_slice(&arr2[right..]);
+        let n: u16 = scan.token();
+        let mut flag: bool = true;
+        let mut y: String = String::new();
+        let mut s: String;
+
+        for _ in 0..n {
+            s = scan.token();
+            y = format!("{}{}", y, s);
+        }
+
+        for i in 0..y.len() {
+            if x[y.chars().nth(i).expect("not a char") as usize - 97] > 0 {
+                x[y.chars().nth(i).expect("not a char") as usize - 97] -= 1;
+            } else {
+                flag = false;
+                break;
+            }
+        }
+
+        if flag {
+            writeln!(w, "YES").ok();
+        } else {
+            writeln!(w, "NO").ok();
+        }
     }
 }
-
-fn merge_sort<T: Copy + std::cmp::PartialOrd>(array: &mut [T]) {
-    let mid = array.len() / 2;
-
-    if mid == 0 {
-        return;
-    }
-
-    merge_sort(&mut array[..mid]);
-    merge_sort(&mut array[mid..]);
-
-    let mut ret = array.to_vec();
-
-    merge(&array[..mid], &array[mid..], &mut ret[..]);
-
-    array.copy_from_slice(&ret);
-}
-
-fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {}
 
 fn main() {
     let (stdin, stdout) = (io::stdin(), io::stdout());

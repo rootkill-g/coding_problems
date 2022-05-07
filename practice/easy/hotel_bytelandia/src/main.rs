@@ -75,7 +75,45 @@ fn merge_sort<T: Copy + std::cmp::PartialOrd>(array: &mut [T]) {
     array.copy_from_slice(&ret);
 }
 
-fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {}
+fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {
+    let t: u8 = scan.token();
+    for _ in 0..t {
+        let n: usize = scan.token();
+        let mut arri: Vec<u16> = (0..n).map(|_| scan.token::<u16>()).collect();
+        let mut dept: Vec<u16> = (0..n).map(|_| scan.token::<u16>()).collect();
+        let mut counter: isize = 0;
+        let mut max: isize = isize::MIN;
+        let mut i_loop_counter: usize = 0;
+        let mut j_loop_counter: usize = 0;
+
+        merge_sort(&mut arri);
+        merge_sort(&mut dept);
+
+        loop {
+            if i_loop_counter >= n || j_loop_counter >= n {
+                break;
+            } else {
+                if dept[j_loop_counter] > arri[i_loop_counter] {
+                    counter += 1;
+
+                    if counter > max {
+                        max = counter;
+                    }
+
+                    i_loop_counter += 1;
+                } else if arri[i_loop_counter] == dept[j_loop_counter] {
+                    i_loop_counter += 1;
+                    j_loop_counter += 1;
+                } else {
+                    counter -= 1;
+                    j_loop_counter += 1;
+                }
+            }
+        }
+
+        writeln!(w, "{}", max).ok();
+    }
+}
 
 fn main() {
     let (stdin, stdout) = (io::stdin(), io::stdout());

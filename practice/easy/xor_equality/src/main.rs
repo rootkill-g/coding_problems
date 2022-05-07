@@ -2,6 +2,9 @@ use std::io;
 use std::io::prelude::*;
 use std::str;
 
+const MOD: usize = 1_000_000_007;
+const MAX: usize = 100_005;
+
 struct Scanner<R> {
     reader: R,
     buf_str: Vec<u8>,
@@ -34,53 +37,28 @@ impl<R: BufRead> Scanner<R> {
     }
 }
 
-fn merge<T: std::cmp::PartialOrd + Copy>(arr1: &[T], arr2: &[T], ret: &mut [T]) {
-    let mut left = 0;
-    let mut right = 0;
-    let mut index = 0;
+fn preset(ans: &mut Vec<usize>) {
+    ans[1] = 1;
 
-    while left < arr1.len() && right < arr2.len() {
-        if arr1[left] <= arr2[right] {
-            ret[index] = arr1[left];
-            left += 1;
-        } else {
-            ret[index] = arr2[right];
-            right += 1;
-        }
-
-        index += 1;
-    }
-
-    if left < arr1.len() {
-        ret[index..].copy_from_slice(&arr1[left..]);
-    } else {
-        ret[index..].copy_from_slice(&arr2[right..]);
+    for i in 2..MAX {
+        ans[i] = (&ans[i - 1] * 2) % MOD;
     }
 }
 
-fn merge_sort<T: Copy + std::cmp::PartialOrd>(array: &mut [T]) {
-    let mid = array.len() / 2;
-
-    if mid == 0 {
-        return;
+fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W, ans: &Vec<usize>) {
+    let t: usize = scan.token();
+    for _ in 0..t {
+        let n: usize = scan.token();
+        writeln!(w, "{}", &ans[n]).ok();
     }
-
-    merge_sort(&mut array[..mid]);
-    merge_sort(&mut array[mid..]);
-
-    let mut ret = array.to_vec();
-
-    merge(&array[..mid], &array[mid..], &mut ret[..]);
-
-    array.copy_from_slice(&ret);
 }
-
-fn solve<R: BufRead, W: Write>(scan: &mut Scanner<R>, w: &mut W) {}
 
 fn main() {
     let (stdin, stdout) = (io::stdin(), io::stdout());
     let mut scan = Scanner::new(stdin.lock());
     let mut out = io::BufWriter::new(stdout.lock());
+    let mut ans: Vec<usize> = vec![0; MAX];
+    preset(&mut ans);
 
-    solve(&mut scan, &mut out);
+    solve(&mut scan, &mut out, &ans);
 }
